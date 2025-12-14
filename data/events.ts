@@ -6,8 +6,8 @@ export const EVENTS: EventSession[] = [
     title: "Inaugural Ceremony",
     speaker: "Dr. Ananya Kulkarni",
     venue: "Main Auditorium",
-    startTime: "2026-02-15T09:00:00",
-    endTime: "2026-02-15T10:00:00",
+    startTime: "2025-02-15T09:00:00",
+    endTime: "2025-02-15T10:00:00",
     description: "Opening ceremony of AURA’26 with keynote address."
   },
   {
@@ -24,8 +24,8 @@ export const EVENTS: EventSession[] = [
     title: "Web Development Workshop",
     speaker: "Ms. Sneha Patil",
     venue: "Computer Lab 2",
-    startTime: "2026-02-15T11:30:00",
-    endTime: "2026-02-15T13:00:00",
+    startTime: "2025-12-15T00:30:00",
+    endTime: "2025-12-15T13:30:00",
     description: "Hands-on workshop covering modern web development practices."
   },
   {
