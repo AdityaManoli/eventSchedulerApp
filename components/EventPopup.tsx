@@ -3,7 +3,8 @@ import { Modal, View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'rea
 import { Ionicons } from '@expo/vector-icons';
 import { EventSession } from '../types';
 import { getEventStatus } from '../utils/time';
-import { getFavorites, saveFavorites } from '../utils/storage';
+import { getFavoritesMap, saveFavoritesMap, FavoritesMap } from '../utils/storage';
+import { scheduleReminder, cancelReminder } from '../utils/notifications'; 
 
 interface EventPopupProps {
   visible: boolean;
@@ -13,21 +14,20 @@ interface EventPopupProps {
 
 export const EventPopup = ({ visible, event, onClose }: EventPopupProps) => {
   const [isFavorite, setIsFavorite] = useState(false);
+
   const getBadgeColor = (status: string) => {
     switch (status) {
-      case 'LIVE':
-        return '#FF3B30';
-      case 'UPCOMING':
-        return '#34C759'; 
-      default:
-        return '#C7C7CC'; 
+      case 'LIVE': return '#FF3B30';
+      case 'UPCOMING': return '#34C759'; 
+      default: return '#C7C7CC'; 
     }
   };
+
   useEffect(() => {
     const checkFavoriteStatus = async () => {
       if (!event) return;
-      const savedIds = await getFavorites();
-      setIsFavorite(savedIds.includes(event.id));
+      const favorites = await getFavoritesMap();
+      setIsFavorite(favorites[event.id] !== undefined);
     };
 
     if (visible && event) {
@@ -38,18 +38,27 @@ export const EventPopup = ({ visible, event, onClose }: EventPopupProps) => {
   const toggleFavorite = async () => {
     if (!event) return;
     
-    const savedIds = await getFavorites();
-    let newIds;
+    const favorites = await getFavoritesMap();
+    const newFavorites: FavoritesMap = { ...favorites };
 
-    if (savedIds.includes(event.id)) {
-      newIds = savedIds.filter(id => id !== event.id);
+    if (favorites[event.id] !== undefined) {
+      const notificationId = favorites[event.id];
+      
+      if (notificationId) {
+        await cancelReminder(notificationId);
+      }
+
+      delete newFavorites[event.id];
       setIsFavorite(false);
+
     } else {
-      newIds = [...savedIds, event.id];
+      const notificationId = await scheduleReminder(event.title, event.startTime);
+      
+      newFavorites[event.id] = notificationId || null;
       setIsFavorite(true);
     }
     
-    await saveFavorites(newIds);
+    await saveFavoritesMap(newFavorites);
   };
 
   if (!event) return null;
@@ -83,6 +92,18 @@ export const EventPopup = ({ visible, event, onClose }: EventPopupProps) => {
             
             <View style={styles.divider} />
             
+            <View style={styles.row}>
+              <Ionicons name="calendar-outline" size={20} color="#666" />
+              <Text style={styles.info}>
+                {new Date(event.startTime).toLocaleDateString([], { 
+                  weekday: 'long', 
+                  month: 'long', 
+                  day: 'numeric',
+                  year: 'numeric'
+                })}
+              </Text>
+            </View>
+
             <View style={styles.row}>
               <Ionicons name="time-outline" size={20} color="#666" />
               <Text style={styles.info}>

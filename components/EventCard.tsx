@@ -11,6 +11,11 @@ interface EventCardProps {
 
 export const EventCard = ({ event, onPress }: EventCardProps) => {
   const status =  getEventStatus(event.startTime, event.endTime);
+  const formattedDate = new Date(event.startTime).toLocaleDateString([], {
+    weekday: 'short', 
+    month: 'short', 
+    day: 'numeric'
+  });
   const formattedTime = new Date(event.startTime).toLocaleTimeString([], { 
     hour: '2-digit', 
     minute: '2-digit' 
@@ -33,7 +38,9 @@ export const EventCard = ({ event, onPress }: EventCardProps) => {
           <View style={[styles.badge, { backgroundColor: getBadgeColor(status) }]}>
           <Text style={styles.badgeText}>{status}</Text>
         </View>
-          <Text style={styles.time}>{formattedTime}</Text>
+          <Text style={styles.time}>
+            {formattedDate} • {formattedTime}
+          </Text>
         </View>
           
         <Text style={styles.title}>{event.title}</Text>

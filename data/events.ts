@@ -24,8 +24,8 @@ export const EVENTS: EventSession[] = [
     title: "Web Development Workshop",
     speaker: "Ms. Sneha Patil",
     venue: "Computer Lab 2",
-    startTime: "2025-12-15T00:30:00",
-    endTime: "2025-12-15T01:30:00",
+    startTime: "2025-12-15T22:31:00",
+    endTime: "2025-12-15T23:30:00",
     description: "Hands-on workshop covering modern web development practices."
   },
   {

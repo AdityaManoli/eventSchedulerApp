@@ -1,20 +1,23 @@
 import React, { useState, useCallback } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { useFocusEffect } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { EVENTS } from '../../data/events';
 import { EventCard } from '../../components/EventCard';
 import { EventPopup } from '../../components/EventPopup';
-import { getFavorites } from '../../utils/storage';
 import { EventSession } from '../../types';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { getFavoritesMap } from '../../utils/storage';
 
 export default function ExploreScreen() {
   const [favoriteEvents, setFavoriteEvents] = useState<EventSession[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<EventSession | null>(null);
+
   useFocusEffect(
     useCallback(() => {
       const loadData = async () => {
-        const savedIds = await getFavorites();
+        const favoritesMap = await getFavoritesMap();
+        const savedIds = Object.keys(favoritesMap);
+        
         const filtered = EVENTS.filter(e => savedIds.includes(e.id));
         setFavoriteEvents(filtered);
       };
@@ -46,13 +49,16 @@ export default function ExploreScreen() {
           contentContainerStyle={{ paddingBottom: 20 }}
         />
       )}
+
       <EventPopup
         visible={selectedEvent !== null}
         event={selectedEvent}
         onClose={() => {
           setSelectedEvent(null);
+          
           const refresh = async () => {
-            const savedIds = await getFavorites();
+            const favoritesMap = await getFavoritesMap();
+            const savedIds = Object.keys(favoritesMap);
             setFavoriteEvents(EVENTS.filter(e => savedIds.includes(e.id)));
           };
           refresh();
