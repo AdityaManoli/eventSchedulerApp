@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { EventCard } from '@/components/EventCard';
 import { EventSession } from '@/types';
 import { useState } from 'react';
+import { EventPopup } from '@/components/EventPopup';
 
 
 export default function HomeScreen() {
@@ -28,6 +29,11 @@ export default function HomeScreen() {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <EventCard event={item} onPress={() => handleEventPress(item)} />}
         contentContainerStyle={{ paddingBottom: 20 }}
+      />
+      <EventPopup 
+        visible={selectedEvent !== null} 
+        event={selectedEvent} 
+        onClose={() => setSelectedEvent(null)} 
       />
     </SafeAreaView>
   );
