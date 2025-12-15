@@ -45,5 +45,14 @@ export const EVENTS: EventSession[] = [
     startTime: "2026-02-15T17:30:00",
     endTime: "2026-02-15T18:30:00",
     description: "Prize distribution and closing remarks for AURA’26."
+  },
+  {
+    id: "6",
+    title: "AI Workshop",
+    speaker: "Aditya Manoli",
+    venue: "Main Auditorium",
+    startTime: "2026-02-15T13:30:00",
+    endTime: "2026-02-15T18:30:00",
+    description: "Short Workshop on AI."
   }
 ];
