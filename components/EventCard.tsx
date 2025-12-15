@@ -2,12 +2,14 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { EventSession } from '../types';
 import { getEventStatus } from '../utils/time';
+import { TouchableOpacity } from 'react-native';
 
 interface EventCardProps {
   event: EventSession;
+  onPress: () => void;  
 }
 
-export const EventCard = ({ event }: EventCardProps) => {
+export const EventCard = ({ event, onPress }: EventCardProps) => {
   const status =  getEventStatus(event.startTime, event.endTime);
   const formattedTime = new Date(event.startTime).toLocaleTimeString([], { 
     hour: '2-digit', 
@@ -25,18 +27,20 @@ export const EventCard = ({ event }: EventCardProps) => {
   };
 
   return (
-    <View style={styles.card}>
-      <View style={styles.header}>
-        <View style={[styles.badge, { backgroundColor: getBadgeColor(status) }]}>
-        <Text style={styles.badgeText}>{status}</Text>
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.card}>
+        <View style={styles.header}>
+          <View style={[styles.badge, { backgroundColor: getBadgeColor(status) }]}>
+          <Text style={styles.badgeText}>{status}</Text>
+        </View>
+          <Text style={styles.time}>{formattedTime}</Text>
+        </View>
+          
+        <Text style={styles.title}>{event.title}</Text>
+        <Text style={styles.speaker}>{event.speaker}</Text>
+        <Text style={styles.venue}>📍 {event.venue}</Text>
       </View>
-        <Text style={styles.time}>{formattedTime}</Text>
-      </View>
-      
-      <Text style={styles.title}>{event.title}</Text>
-      <Text style={styles.speaker}>{event.speaker}</Text>
-      <Text style={styles.venue}>📍 {event.venue}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -47,12 +51,10 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 12,
     marginHorizontal: 16,
-    // Shadow for iOS
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    // Elevation for Android
     elevation: 3,
   },
   header: {
@@ -62,7 +64,7 @@ const styles = StyleSheet.create({
   },
   time: {
     fontSize: 14,
-    color: '#007AFF', // Nice iOS Blue
+    color: '#007AFF', 
     fontWeight: '600',
   },
   title: {

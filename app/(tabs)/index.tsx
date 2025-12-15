@@ -3,15 +3,30 @@ import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { EVENTS } from '../../data/events'; 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { EventCard } from '@/components/EventCard';
+import { EventSession } from '@/types';
+import { useState } from 'react';
+
 
 export default function HomeScreen() {
+  const [selectedEvent, setSelectedEvent] = useState<EventSession | null>(null);
+  
+  const handleEventPress = (event: EventSession) => {
+    setSelectedEvent(event);
+  };
+
+  const closePopup = () => {
+    setSelectedEvent(null);
+  };
+  
+  
+  
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.header}>Event Schedule</Text>
       <FlatList
         data={EVENTS}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <EventCard event={item} />}
+        renderItem={({ item }) => <EventCard event={item} onPress={() => handleEventPress(item)} />}
         contentContainerStyle={{ paddingBottom: 20 }}
       />
     </SafeAreaView>
